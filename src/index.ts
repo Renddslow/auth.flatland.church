@@ -31,7 +31,8 @@ polka()
   })
   .get('/login', xsrf, serveForm('login'))
   .get('/create-account', xsrf, serveForm('create-account'))
-  .post('/api/tokens', xsrf, () => {})
+  .post('/login', xsrf, () => {})
+  .post('/create-account', xsrf, () => {})
   // Only API method open to other services
   .get('/api/permissions')
   /** Admin portal */
