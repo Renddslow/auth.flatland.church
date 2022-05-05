@@ -8,6 +8,20 @@ import apps from './apps';
 import globalStyles from './globalStyles';
 import logo from './logo';
 
+const atLeastMatchesHost = (target: string, canonical: string): boolean => {
+  if (target === canonical) return true;
+
+  return safelyMakeURL(target).host === safelyMakeURL(canonical).host;
+};
+
+const safelyMakeURL = (url: string): URL | Record<string, any> => {
+  try {
+    return new URL(url);
+  } catch (e) {
+    return {};
+  }
+};
+
 const serveForm = (form) => async (req, res: ServerResponse) => {
   const { callbackURL, app } = req.query;
   const file = await fs.readFile(path.join(__dirname, '../templates', `${form}.html`));
@@ -22,7 +36,7 @@ const serveForm = (form) => async (req, res: ServerResponse) => {
     return res.end();
   }
 
-  if (callbackURL && !callbackURL.startsWith(appInfo[app]?.callbackURL)) {
+  if (callbackURL && !atLeastMatchesHost(callbackURL, appInfo[app]?.callbackURL)) {
     const url = new URL(callbackURL);
     url.searchParams.set('error', 'InvalidCallbackError');
     res.setHeader('Location', url.toString());
