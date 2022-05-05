@@ -31,7 +31,9 @@
     "watchlist": "^0.3.1"
   },
   "dependencies": {
+    "@prisma/client": "^3.13.0",
     "@types/csurf": "^1.11.2",
+    "argon2": "^0.28.5",
     "await-to-js": "^3.0.0",
     "body-parser": "^1.20.0",
     "cookie": "^0.5.0",

@@ -5,3 +5,5 @@ dev.db*
 prod.db*
 
 .env
+
+yarn-error*

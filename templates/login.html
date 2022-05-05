@@ -14,9 +14,10 @@
       <div class="logo-container"><%- logo %></div>
       <h1>Login to your Flatland Church account</h1>
       <p>Continuing to <strong><%- appName %></strong></p>
-      <form action="/api/tokens" method="post">
+      <form action="/login" method="post">
         <input type="hidden" name="_csrf" value="<%- csrf %>" />
         <input type="hidden" name="app" value="<%- app %>" />
+        <input type="hidden" name="inviteCode" value="<%- inviteCode %>" />
         <input type="hidden" name="callbackURL" value="<%- callbackURL %>" />
         <div class="form-ctl">
           <label for="email">Email</label>

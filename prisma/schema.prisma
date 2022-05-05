@@ -8,13 +8,14 @@ model User {
   first_name                     String
   last_name                      String
   email                          String           @unique
-  email_is_verified              Boolean          @default(false)
-  email_verification_code        String
-  email_verified_at              DateTime
-  phone_number                   String           @unique
-  phone_number_is_verified       Boolean          @default(false)
-  phone_number_verification_code String
-  phone_number_verified_at       DateTime
+  email_is_verified              Boolean?         @default(false)
+  email_verification_code        String?
+  email_verified_at              DateTime?
+  phone_number                   String?          @unique
+  phone_number_is_verified       Boolean?         @default(false)
+  phone_number_verification_code String?
+  phone_number_verified_at       DateTime?
+  password                       String
   created_at                     DateTime         @default(now())
   updated_at                     DateTime         @updatedAt
   UserConnection                 UserConnection[]
@@ -26,29 +27,29 @@ model User {
 
 model Connection {
   id             Int              @id @default(autoincrement())
-  name           String?          @unique
-  url            String?
+  name           String           @unique
+  url            String
   created_at     DateTime         @default(now())
   updated_at     DateTime         @updatedAt
   UserConnection UserConnection[]
 }
 
 model UserConnection {
-  id            Int         @id @default(autoincrement())
-  user          User?       @relation(fields: [user_id], references: [id])
-  connection    Connection? @relation(fields: [connection_id], references: [id])
-  associated_id String?
-  user_id       Int?
-  connection_id Int?
-  created_at    DateTime    @default(now())
-  updated_at    DateTime    @updatedAt
+  id            Int        @id @default(autoincrement())
+  user          User       @relation(fields: [user_id], references: [id])
+  connection    Connection @relation(fields: [connection_id], references: [id])
+  associated_id String
+  user_id       Int
+  connection_id Int
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @updatedAt
 }
 
 model App {
   id                        Int         @id @default(autoincrement())
-  name                      String?
-  description               String?
-  callback_url              String?
+  name                      String
+  description               String
+  callback_url              String
   allow_self_service_signup Boolean     @default(true)
   AppRole                   AppRole[]
   UserApp                   UserApp[]
@@ -60,12 +61,12 @@ model App {
 
 model AppInvite {
   id          Int     @id @default(autoincrement())
-  email       String // When the user isn't yet registered
-  user        User    @relation(fields: [user_id], references: [id])
-  invite_code String?
-  app         App?    @relation(fields: [app_id], references: [id])
-  app_id      Int?
-  user_id     Int
+  email       String? // When the user isn't yet registered
+  user        User?   @relation(fields: [user_id], references: [id])
+  invite_code String
+  app         App     @relation(fields: [app_id], references: [id])
+  app_id      Int
+  user_id     Int?
 
   @@unique([app_id, user_id])
   @@unique([app_id, email])
@@ -73,12 +74,12 @@ model AppInvite {
 
 model AppRole {
   id               Int       @id @default(autoincrement())
-  name             String?
-  shortcode        String?
-  app              App?      @relation(fields: [app_id], references: [id])
+  name             String
+  shortcode        String
+  app              App       @relation(fields: [app_id], references: [id])
   can_grant_access Boolean   @default(false)
   can_grant_role   Boolean   @default(false)
-  app_id           Int?
+  app_id           Int
   UserApp          UserApp[]
   created_at       DateTime  @default(now())
   updated_at       DateTime  @updatedAt
@@ -86,24 +87,28 @@ model AppRole {
 
 model UserApp {
   id          Int      @id @default(autoincrement())
-  user        User?    @relation(fields: [user_id], references: [id])
-  app         App?     @relation(fields: [app_id], references: [id])
-  role        AppRole? @relation(fields: [app_role_id], references: [id])
-  user_id     Int?
-  app_id      Int?
-  app_role_id Int?
+  user        User     @relation(fields: [user_id], references: [id])
+  app         App      @relation(fields: [app_id], references: [id])
+  role        AppRole  @relation(fields: [app_role_id], references: [id])
+  user_id     Int
+  app_id      Int
+  app_role_id Int
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 }
 
 model Audit {
   id               Int      @id @default(autoincrement())
-  user             User?    @relation(fields: [user_id], references: [id], name: "actor")
-  app              App?     @relation(fields: [app_id], references: [id])
-  affected_user    User     @relation(fields: [affected_user_id], references: [id], name: "affected")
-  action           String?
+  user             User     @relation(fields: [user_id], references: [id], name: "actor")
+  app              App      @relation(fields: [app_id], references: [id])
+  affected_user    User?    @relation(fields: [affected_user_id], references: [id], name: "affected")
+  action           String
   createdAt        DateTime @default(now())
-  user_id          Int?
-  app_id           Int?
-  affected_user_id Int
+  user_id          Int
+  app_id           Int
+  affected_user_id Int?
+}
+
+generator client {
+  provider = "prisma-client-js"
 }

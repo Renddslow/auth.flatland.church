@@ -22,8 +22,13 @@ const safelyMakeURL = (url: string): URL | Record<string, any> => {
   }
 };
 
+const getCallbackUrl = (target, canonical, app) => {
+  if (!app) return 'https://flatlandchurch.com';
+  return target || canonical;
+};
+
 const serveForm = (form) => async (req, res: ServerResponse) => {
-  const { callbackURL, app } = req.query;
+  const { callbackURL, app, inviteCode } = req.query;
   const file = await fs.readFile(path.join(__dirname, '../templates', `${form}.html`));
 
   const appInfo = apps[app];
@@ -36,7 +41,7 @@ const serveForm = (form) => async (req, res: ServerResponse) => {
     return res.end();
   }
 
-  if (callbackURL && !atLeastMatchesHost(callbackURL, appInfo[app]?.callbackURL)) {
+  if (app && callbackURL && !atLeastMatchesHost(callbackURL, appInfo?.callbackURL)) {
     const url = new URL(callbackURL);
     url.searchParams.set('error', 'InvalidCallbackError');
     res.setHeader('Location', url.toString());
@@ -49,10 +54,11 @@ const serveForm = (form) => async (req, res: ServerResponse) => {
     csrf: req.csrfToken(),
     appName: appInfo?.appName || 'Flatland Church',
     app,
-    callbackURL: callbackURL || appInfo[app]?.callbackURL,
+    callbackURL: getCallbackUrl(callbackURL, appInfo?.callbackURL, app),
     globalStyles,
     searchParams: req.search || '',
     logo,
+    inviteCode: inviteCode || '',
   });
   res.setHeader('Content-Type', 'text/html');
   res.end(html);

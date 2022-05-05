@@ -1,11 +1,14 @@
 import polka from 'polka';
 import cors from 'cors';
-import { json } from 'body-parser';
+import { json, urlencoded } from 'body-parser';
 import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
 import sirv from 'sirv';
 
 import serveForm from './serveForm';
+import httpWrapper from './utils/httpWrapper';
+import { createAccountFromFrontend } from './controllers/createAccount';
+import { customRequestWrapper } from './utils/jsonAPIWrapper';
 
 const PORT = process.env.PORT || 8080;
 
@@ -22,7 +25,7 @@ const assets = sirv('public', {
 });
 
 polka()
-  .use(cors(), json(), cookieParser(), noRobots(), assets)
+  .use(cors(), json(), urlencoded({ extended: true }), cookieParser(), noRobots(), assets)
   // Static
   .get('/', (_, res) => {
     res.setHeader('Location', '/login');
@@ -31,8 +34,13 @@ polka()
   })
   .get('/login', xsrf, serveForm('login'))
   .get('/create-account', xsrf, serveForm('create-account'))
+  .get('/welcome', (_, res) => res.end())
   .post('/login', xsrf, () => {})
-  .post('/create-account', xsrf, () => {})
+  .post(
+    '/create-account',
+    xsrf,
+    httpWrapper(customRequestWrapper((req) => req.body, createAccountFromFrontend)),
+  )
   // Only API method open to other services
   .get('/api/permissions')
   /** Admin portal */
