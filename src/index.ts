@@ -6,9 +6,7 @@ import cookieParser from 'cookie-parser';
 import sirv from 'sirv';
 
 import serveForm from './serveForm';
-import httpWrapper from './utils/httpWrapper';
-import { createAccountFromFrontend } from './controllers/createAccount';
-import { customRequestWrapper } from './utils/jsonAPIWrapper';
+import createAccountFromFrontend from './controllers/createAccountFromFrontend';
 
 const PORT = process.env.PORT || 8080;
 
@@ -36,11 +34,7 @@ polka()
   .get('/create-account', xsrf, serveForm('create-account'))
   .get('/welcome', (_, res) => res.end())
   .post('/login', xsrf, () => {})
-  .post(
-    '/create-account',
-    xsrf,
-    httpWrapper(customRequestWrapper((req) => req.body, createAccountFromFrontend)),
-  )
+  .post('/create-account', xsrf, createAccountFromFrontend)
   // Only API method open to other services
   .get('/api/permissions')
   /** Admin portal */
