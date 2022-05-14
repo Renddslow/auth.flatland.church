@@ -48,6 +48,7 @@ model UserConnection {
 model App {
   id                        Int         @id @default(autoincrement())
   name                      String
+  shortcode                 String      @unique
   description               String
   callback_url              String
   allow_self_service_signup Boolean     @default(true)
@@ -60,16 +61,20 @@ model App {
 }
 
 model AppInvite {
-  id          Int     @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   email       String? // When the user isn't yet registered
-  user        User?   @relation(fields: [user_id], references: [id])
+  user        User?     @relation(fields: [user_id], references: [id])
   invite_code String
-  app         App     @relation(fields: [app_id], references: [id])
+  app         App       @relation(fields: [app_id], references: [id])
   app_id      Int
   user_id     Int?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  accepted_at DateTime?
 
   @@unique([app_id, user_id])
   @@unique([app_id, email])
+  @@index(invite_code)
 }
 
 model AppRole {

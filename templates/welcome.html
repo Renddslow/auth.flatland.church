@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Welcome</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <link rel="icon" type="image/x-icon" href="https://flatlandchurch.com/fl_glyph_favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/form.css" />
+    <meta name="viewport" />
+    <%- globalStyles %>
+  </head>
+  <body>
+    <div class="app">
+      <article class="card">
+        <% if (status === 'verify') { %>
+        <h2>Please verify your email address</h2>
+        <p>Before logging you in to <strong><% appName %></strong></p>
+        <% } else { %>
+        <h2>Welcome, <% firstName %></h2>
+        <p>
+          You've logged in to our authenticator directly. It's likely that you were trying to get to
+          one of Flatland's apps.
+        </p>
+        <p>Below is a list of all the apps you belong to. Hopefully that helps. <span>😊</span></p>
+        <h3>Apps</h3>
+        <% if (apps.length) { %> <% for (const app of apps) { %>
+        <div>
+          <div>
+            <img src="" />
+            <p><% app.name %></p>
+            <% if (app.role > 1) { %>
+            <span class="role"><% app.role %></span>
+            <% } %>
+          </div>
+          <a class="launch-btn">Open</a>
+        </div>
+        <% } %> <% } else { %> <% } %> <% } %>
+      </article>
+    </div>
+  </body>
+</html>

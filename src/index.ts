@@ -5,8 +5,9 @@ import csurf from 'csurf';
 import cookieParser from 'cookie-parser';
 import sirv from 'sirv';
 
-import serveForm from './serveForm';
+import serveForm from './view-controllers/serveForm';
 import createAccountFromFrontend from './controllers/createAccountFromFrontend';
+import welcome from './view-controllers/welcome';
 
 const PORT = process.env.PORT || 8080;
 
@@ -32,7 +33,7 @@ polka()
   })
   .get('/login', xsrf, serveForm('login'))
   .get('/create-account', xsrf, serveForm('create-account'))
-  .get('/welcome', (_, res) => res.end())
+  .get('/welcome', welcome)
   .post('/login', xsrf, () => {})
   .post('/create-account', xsrf, createAccountFromFrontend)
   // Only API method open to other services

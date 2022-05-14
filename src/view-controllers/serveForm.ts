@@ -4,7 +4,7 @@ import ejs from 'ejs';
 import * as path from 'path';
 import { URL } from 'url';
 
-import apps from './apps';
+import getAppInfo from '../data/getAppInfo';
 import globalStyles from './globalStyles';
 import logo from './logo';
 
@@ -31,7 +31,7 @@ const serveForm = (form) => async (req, res: ServerResponse) => {
   const { callbackURL, app, inviteCode } = req.query;
   const file = await fs.readFile(path.join(__dirname, '../templates', `${form}.html`));
 
-  const appInfo = apps[app];
+  const appInfo = await getAppInfo(app);
 
   if (callbackURL && !app) {
     const url = new URL(callbackURL);
@@ -41,7 +41,7 @@ const serveForm = (form) => async (req, res: ServerResponse) => {
     return res.end();
   }
 
-  if (app && callbackURL && !atLeastMatchesHost(callbackURL, appInfo?.callbackURL)) {
+  if (app && callbackURL && !atLeastMatchesHost(callbackURL, appInfo?.callback_url)) {
     const url = new URL(callbackURL);
     url.searchParams.set('error', 'InvalidCallbackError');
     res.setHeader('Location', url.toString());
@@ -52,9 +52,9 @@ const serveForm = (form) => async (req, res: ServerResponse) => {
   const html = ejs.render(file.toString(), {
     // @ts-ignore
     csrf: req.csrfToken(),
-    appName: appInfo?.appName || 'Flatland Church',
+    appName: appInfo?.name || 'Flatland Church',
     app,
-    callbackURL: getCallbackUrl(callbackURL, appInfo?.callbackURL, app),
+    callbackURL: getCallbackUrl(callbackURL, appInfo?.callback_url, app),
     globalStyles,
     searchParams: req.search || '',
     logo,
