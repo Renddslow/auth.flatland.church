@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@prisma/client": "^3.13.0",
+    "@sendgrid/mail": "^7.6.2",
     "@types/csurf": "^1.11.2",
     "argon2": "^0.28.5",
     "await-to-js": "^3.0.0",

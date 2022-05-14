@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <%- globalStyles %>
+    <style>
+      p {
+        margin-bottom: 12px;
+      }
+
+      .copy-link {
+        margin-top: 24px;
+      }
+
+      .cta {
+        padding: 12px 24px;
+        box-sizing: border-box;
+        font-size: 16px;
+        appearance: none;
+        -webkit-appearance: none;
+        border: none;
+        border-radius: 8px;
+        background: #307cdf;
+        font-weight: 600;
+        display: block;
+        max-width: max-content;
+        text-decoration: none;
+        line-height: 1.2;
+        color: #f9fffd !important;
+        border: 0;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Hello <%- firstName %>,</p>
+    <p>
+      Thanks for signing up for a Flatland Church account. This will get you into all of our future
+      Bible readers and other discipleship-focused apps.
+    </p>
+    <% if (app) { %>
+    <p>
+      You were invited to join the <strong><%- app %></strong> app. When you click the link below
+      you will be forwarded to that app and logged in.
+    </p>
+    <% } %>
+    <a
+      href="https://auth.flatland.church/?token=<%- token %>&code=<%- emailVerificationCode %>"
+      class="cta"
+      >Verify Your Email</a
+    >
+    <div class="copy-link">
+      <p>
+        If you have trouble with the button, copy and paste the link below into your browser bar:
+      </p>
+      <p>
+        https://auth.flatland.church/verify?token=<%- token %>&code=<%- emailVerificationCode %>
+      </p>
+    </div>
+    <%- footer %>
+  </body>
+</html>

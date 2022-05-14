@@ -10,6 +10,10 @@ const globalStyles = `
     html, body {
         height: 100%;
     }
+    
+    button {
+        cursor: pointer;
+    }
 </style>
 `;
 

@@ -6,6 +6,9 @@ import to from 'await-to-js';
 import httpWrapper from '../utils/httpWrapper';
 import { customRequestWrapper } from '../utils/jsonAPIWrapper';
 import createVerificationCode from './createVerificationCode';
+import createEmailBody from '../view-controllers/createEmailBody';
+import getAppInfo from '../data/getAppInfo';
+import sendEmail from '../utils/sendEmail';
 
 const prisma = new PrismaClient();
 
@@ -16,8 +19,9 @@ const createAccountFromFrontend = async ({
   password,
   app,
   inviteCode,
+  callbackURL,
 }) => {
-  const emailVerificationCode = await argon2.hash(createVerificationCode());
+  const emailVerificationCode = createVerificationCode();
 
   const [err, user] = await to(
     prisma.user.create({
@@ -26,7 +30,7 @@ const createAccountFromFrontend = async ({
         last_name: lastName,
         email,
         password: await argon2.hash(password),
-        email_verification_code: emailVerificationCode,
+        email_verification_code: await argon2.hash(emailVerificationCode),
       },
     }),
   );
@@ -75,20 +79,46 @@ const createAccountFromFrontend = async ({
     }
   }
 
-  // TODO: send email verification
-  const token = jwt.sign(
+  const frontendToken = jwt.sign(
     {
       id: user.id,
       firstName,
       lastName,
       email,
       app,
+      callbackURL,
     },
     process.env.PRE_VERIFY_SECRET,
   );
 
+  const emailToken = jwt.sign(
+    {
+      id: user.id,
+      firstName,
+      lastName,
+      email,
+      app,
+      callbackURL,
+      emailVerificationCode,
+    },
+    process.env.SERVER_SECRET,
+  );
+
+  const appInfo = await getAppInfo(app);
+
+  const body = await createEmailBody('verification', {
+    token: emailToken,
+    emailVerificationCode,
+    firstName,
+    lastName,
+    email,
+    app: appInfo?.name || '',
+  });
+
+  await sendEmail(email, `${firstName}, please verify your email address`, body);
+
   return {
-    headers: [['Location', `/welcome?token=${token}`]],
+    headers: [['Location', `/welcome?token=${frontendToken}`]],
     statusCode: 302,
   };
 };
@@ -102,6 +132,7 @@ export default httpWrapper(
       password: req.body['new-password'],
       app: req.body.app,
       inviteCode: req.body.inviteCode,
+      callbackURL: req.body.callbackURL,
     }),
     createAccountFromFrontend,
   ),

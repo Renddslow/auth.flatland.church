@@ -34,6 +34,7 @@ polka()
   .get('/login', xsrf, serveForm('login'))
   .get('/create-account', xsrf, serveForm('create-account'))
   .get('/welcome', welcome)
+  .get('/verify', () => {})
   .post('/login', xsrf, () => {})
   .post('/create-account', xsrf, createAccountFromFrontend)
   // Only API method open to other services
