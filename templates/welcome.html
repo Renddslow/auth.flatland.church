@@ -14,7 +14,14 @@
       <article class="card">
         <% if (status === 'verify') { %>
         <h2>Please verify your email address</h2>
-        <p>Before logging you in to <strong><% appName %></strong></p>
+        <p>
+          Before logging you in to <strong><%- appName %></strong>, please verify your email
+          address.
+        </p>
+        <p>
+          We sent an email to <strong><%- email %></strong> with a verification link. Looking
+          forward to seeing you. <span>👀</span>
+        </p>
         <% } else { %>
         <h2>Welcome, <% firstName %></h2>
         <p>
