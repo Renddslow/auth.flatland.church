@@ -5,6 +5,7 @@ import to from 'await-to-js';
 
 import httpWrapper from '../utils/httpWrapper';
 import { customRequestWrapper } from '../utils/jsonAPIWrapper';
+import createVerificationCode from './createVerificationCode';
 
 const prisma = new PrismaClient();
 
@@ -16,6 +17,8 @@ const createAccountFromFrontend = async ({
   app,
   inviteCode,
 }) => {
+  const emailVerificationCode = await argon2.hash(createVerificationCode());
+
   const [err, user] = await to(
     prisma.user.create({
       data: {
@@ -23,6 +26,7 @@ const createAccountFromFrontend = async ({
         last_name: lastName,
         email,
         password: await argon2.hash(password),
+        email_verification_code: emailVerificationCode,
       },
     }),
   );
@@ -54,14 +58,20 @@ const createAccountFromFrontend = async ({
     );
 
     if (invite) {
-      prisma.appInvite.update({
-        where: { id: invite.id },
-        data: {
-          accepted_at: new Date(),
-          email: null,
-          user_id: user.id,
-        },
-      });
+      await to(
+        prisma.appInvite.update({
+          where: { id: invite.id },
+          data: {
+            accepted_at: new Date(),
+            email: null,
+            user: {
+              connect: {
+                id: user.id,
+              },
+            },
+          },
+        }),
+      );
     }
   }
 
@@ -90,6 +100,8 @@ export default httpWrapper(
       lastName: req.body['last-name'],
       email: req.body.email,
       password: req.body['new-password'],
+      app: req.body.app,
+      inviteCode: req.body.inviteCode,
     }),
     createAccountFromFrontend,
   ),

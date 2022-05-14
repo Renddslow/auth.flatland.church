@@ -64,7 +64,7 @@ model AppInvite {
   id          Int       @id @default(autoincrement())
   email       String? // When the user isn't yet registered
   user        User?     @relation(fields: [user_id], references: [id])
-  invite_code String
+  invite_code String    @unique
   app         App       @relation(fields: [app_id], references: [id])
   app_id      Int
   user_id     Int?
@@ -74,7 +74,6 @@ model AppInvite {
 
   @@unique([app_id, user_id])
   @@unique([app_id, email])
-  @@index(invite_code)
 }
 
 model AppRole {

@@ -12,7 +12,9 @@
     "serve": "nodemon -e js,mjs,json,css dist/index.js",
     "build": "node build.cjs",
     "build:watch": "yarn build --watch",
-    "prisma:fmt": "prisma format"
+    "format": "prisma format",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev"
   },
   "devDependencies": {
     "@dmsi/prettier-config": "^1.3.0",
