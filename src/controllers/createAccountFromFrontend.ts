@@ -88,7 +88,7 @@ const createAccountFromFrontend = async ({
   );
 
   return {
-    headers: [['Location', `/welcome?token=${token}&app=${app}`]],
+    headers: [['Location', `/welcome?token=${token}`]],
     statusCode: 302,
   };
 };

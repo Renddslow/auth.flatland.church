@@ -5,9 +5,11 @@ import ejs from 'ejs';
 import getAppInfo from '../data/getAppInfo';
 import globalStyles from './globalStyles';
 import getUserFromToken from '../data/getUserFromToken';
+import verifyToken from '../data/verifyToken';
+import { JwtPayload } from 'jsonwebtoken';
 
 const welcome = async (req, res) => {
-  const { app, token } = req.query;
+  const { token } = req.query;
 
   if (!token) {
     res.statusCode = 307;
@@ -17,9 +19,11 @@ const welcome = async (req, res) => {
 
   const file = await fs.readFile(path.join(__dirname, '../templates', `welcome.html`));
 
-  const appInfo = await getAppInfo(app);
+  const verifiedToken = verifyToken('pre-verify', token);
 
-  const user = await getUserFromToken('pre-verify', token);
+  const appInfo = await getAppInfo((verifiedToken as JwtPayload)?.app);
+
+  const user = await getUserFromToken(verifiedToken);
 
   const html = ejs.render(file.toString(), {
     globalStyles,
