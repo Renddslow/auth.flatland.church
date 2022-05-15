@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Please wait... | Flatland Church Account</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
+    <link rel="icon" type="image/x-icon" href="https://flatlandchurch.com/fl_glyph_favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/form.css" />
+    <%- globalStyles %>
+    <style>
+      @keyframes fade {
+        0% {
+          opacity: 0;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .hidden {
+        opacity: 0;
+        animation-name: fade;
+        animation-delay: 4s;
+        animation-fill-mode: forwards;
+        animation-duration: 0.2s;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <article class="card">
+        <h1>Redirecting...</h1>
+        <p class="hidden">
+          If you are not redirected in 5 seconds, <a href="<%- intent %>">click here</a>
+        </p>
+      </article>
+    </div>
+    <script>
+      (() => {
+        setTimeout(() => {
+          window.location.href = '<%- intent %>';
+        }, 3900);
+      })();
+    </script>
+  </body>
+</html>

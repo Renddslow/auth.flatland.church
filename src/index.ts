@@ -8,6 +8,8 @@ import sirv from 'sirv';
 import serveForm from './view-controllers/serveForm';
 import createAccountFromFrontend from './controllers/createAccountFromFrontend';
 import welcome from './view-controllers/welcome';
+import verifyEmail from './controllers/verifyEmail';
+import handleIntent from './controllers/handleIntent';
 
 const PORT = process.env.PORT || 8080;
 
@@ -34,7 +36,8 @@ polka()
   .get('/login', xsrf, serveForm('login'))
   .get('/create-account', xsrf, serveForm('create-account'))
   .get('/welcome', welcome)
-  .get('/verify', () => {})
+  .get('/verify', verifyEmail)
+  .get('/intent', handleIntent)
   .post('/login', xsrf, () => {})
   .post('/create-account', xsrf, createAccountFromFrontend)
   // Only API method open to other services

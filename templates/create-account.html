@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
     <link rel="icon" type="image/x-icon" href="https://flatlandchurch.com/fl_glyph_favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/form.css" />
-    <meta name="viewport" />
     <%- globalStyles %>
   </head>
   <div class="app">
@@ -22,20 +21,32 @@
         <div class="row">
           <div class="form-ctl">
             <label for="first-name">First Name</label>
-            <input type="text" id="first-name" name="first-name" autocomplete="given-name" />
+            <input
+              required
+              type="text"
+              id="first-name"
+              name="first-name"
+              autocomplete="given-name"
+            />
           </div>
           <div class="form-ctl">
             <label for="last-name">Last Name</label>
-            <input type="text" id="last-name" name="last-name" autocomplete="family-name" />
+            <input
+              required
+              type="text"
+              id="last-name"
+              name="last-name"
+              autocomplete="family-name"
+            />
           </div>
         </div>
         <div class="form-ctl">
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" />
+          <input required type="email" id="email" name="email" />
         </div>
         <div class="form-ctl">
           <label for="password">New Password</label>
-          <input type="password" id="password" name="new-password" />
+          <input required type="password" id="password" name="new-password" />
         </div>
         <div class="button-row">
           <p>Already have an account? <a href="/login<%- searchParams %>">Login</a></p>

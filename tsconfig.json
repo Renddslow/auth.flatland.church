@@ -12,9 +12,9 @@
     "resolveJsonModule": true,
     "jsx": "react",
     "jsxFactory": "React.createElement",
-      "jsxFragmentFactory": "React.Fragment"
+    "jsxFragmentFactory": "React.Fragment"
   },
-    "paths": {
+  "paths": {
     "*": ["node_modules/*"]
   },
   "include": ["src/**/*"],

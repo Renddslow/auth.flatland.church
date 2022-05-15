@@ -21,11 +21,11 @@
         <input type="hidden" name="callbackURL" value="<%- callbackURL %>" />
         <div class="form-ctl">
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" />
+          <input required type="email" id="email" name="email" />
         </div>
         <div class="form-ctl">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" />
+          <input required type="password" id="password" name="password" />
         </div>
         <div class="button-row">
           <a href="/create-account<%- searchParams %>">Create Account</a>

@@ -43,6 +43,13 @@
       you will be forwarded to that app and logged in.
     </p>
     <% } %>
+    <p>
+      <small
+        >(This link is only to verify your email address and will only work once. If you need to
+        login with a different device simply login with the email and password you created this
+        account with).</small
+      >
+    </p>
     <a
       href="https://auth.flatland.church/?token=<%- token %>&code=<%- emailVerificationCode %>"
       class="cta"
